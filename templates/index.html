@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Gen - AI Flashcard Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "index.css" %}">
+    <script src="{% static 'index.js' %}">    
+    </script>
+</head>
+<body>
+    <div class="background">
+        <div class="header">
+            <h1>Flash Gen</h1>
+            <p>An AI-driven study tool to generate flashcards from text in <strong>seconds</strong></p>
+            <p><strong>Enhance</strong> your study sessions with <strong>time-saving</strong> and <strong>question-centered learning</strong></p>
+            <p>Developed by a computer science undergraduate to assist students everywhere</p>
+        </div>
+        <div class="input_form">
+            <form id="flashcard-form" action="/process_text/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="text_input">Enter the text:<br>(Supports LaTeX code)</label>
+                <textarea id="text_input" name="text_input" rows="4" cols="50"></textarea><br>
+                <label for="image_input">Or<br><br>Upload an image:<br>(can't support LaTeX code)</label>
+                <input type="file" id="image_input" name="image_input"><br>
+                <p class="limit-message">Note: Please limit your input to 3000 words or less. (Quality over quantity)</p>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <div class="info-area" id="info-area">
+            <p class="info-text">The textarea can support LaTeX code.</p>
+            <div class="image-container">
+                <p class="before-text">Turn this...</p>
+                <img class="before" src="{% static 'img/latex before.webp' %}" alt="Flashcard Example 1">
+                <p class="after-text">To this!</p>
+                <img class="after" src="{% static 'img/latex after.webp' %}" alt="Flashcard Example 2">
+            </div>
+            <p class="usage-text">-Copy the generated flashcards to your clipboard as markdown for obsidian or download an anki-compatible file.</p>
+            <p class="usage-text">-If flashcards are not optimal, refresh the page and new flashcards will be generated.</p>
+            <p class="usage-text">-Does your image have LaTeX code? Try <a href="https://mathpix.com/" target="_blank">MathPix</a>!</p>
+
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+

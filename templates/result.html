@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards</title>
+    <link rel="stylesheet" href="{% static "result.css" %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+        var flashcardsData = {{ flashcards_json|safe }};
+    </script>
+    
+</head>
+<body>
+    <div id="header">
+    
+        <h1 id="title-container">Flashcards</h1>
+        
+        <button onclick="copyAllFlashcardsMarkdown()" id="copy-all-markdown-btn">Copy All Flashcards as Markdown</button>
+        <button onclick="downloadFlashcards()" id="download-anki">Download Flashcards for Anki</button>
+    </div>
+    <div id="flashcards-content">
+        <div id="flashcards-container"></div>
+    </div>
+    <script src="{% static 'result.js' %}"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
