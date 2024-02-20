@@ -10,22 +10,321 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script>
-        var flashcardsData = {{ flashcards_json|safe }};
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                processRefs: true,
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process',
+            },
+            startup: {
+                typeset: true,
+                pageReady: () => {
+                    // Mock data for demonstration purposes
+                    var flashcardsData = {{ flashcards_json|safe }};
+                
+                    var batchSize = 5; // Number of flashcards to load at a time
+                    var startIndex = 0; // Index to track the starting point for loading
+                
+                    // Function to load a batch of flashcards
+                    function loadFlashcards() {
+                        for (var i = startIndex; i < startIndex + batchSize && i < flashcardsData.length; i++) {
+                            var flashcardElement = createFlashcardElement(flashcardsData[i]);
+                            flashcardsContainer.appendChild(flashcardElement);
+                        }
+                
+                        startIndex += batchSize;
+                    }
+                
+                    // Load the initial batch of flashcards
+                    loadFlashcards();
+                
+                    // Event listener for scrolling
+                    window.addEventListener('scroll', function () {
+                        // Check if the user has scrolled to the bottom of the page
+                        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                            // Load more flashcards
+                            loadFlashcards();
+                        }
+                    });
+                
+                    // Typeset all flashcards after the DOM is loaded
+                    MathJax.typesetPromise().then(function () {
+                        // Load the initial batch of flashcards
+                        loadFlashcards();
+                    });
+                },
+            },
+        };
     </script>
-    
 </head>
 <body>
-    <div id="header">
-    
-        <h1 id="title-container">Flashcards</h1>
-        
-        <button onclick="copyAllFlashcardsMarkdown()" id="copy-all-markdown-btn">Copy All Flashcards as Markdown</button>
-        <button onclick="downloadFlashcards()" id="download-anki">Download Flashcards for Anki</button>
-    </div>
+    <button onclick="copyAllFlashcardsMarkdown()" id="copy-all-markdown-btn">Copy All Flashcards as Markdown</button>
+    <button onclick="downloadFlashcards()" id="download-anki">Download  All Flashcards for Anki</button>
+    <button id="download-selected-button">Download Selected Flashcards</button>
     <div id="flashcards-content">
+        <h1 style="color:white;">Flashcards</h1>
         <div id="flashcards-container"></div>
     </div>
-    <script src="{% static 'result.js' %}"></script>
+
+   
+
+    <script>
+        var flashcardsContainer = document.getElementById('flashcards-container');
+        var flashcardsData = {{ flashcards_json|safe }};
+
+        // Function to create a flashcard element (similar to your existing implementation)
+        function createFlashcardElement(flashcard, index) {
+            var flashcardElement = document.createElement('div');
+            flashcardElement.className = 'flashcard';
+        
+            var questionElement = document.createElement('h2');
+            questionElement.textContent = 'Question:';
+        
+            var questionContent = document.createElement('p');
+            questionContent.innerHTML = flashcard.question;
+        
+            var toggleAnswerElement = document.createElement('h2');
+            toggleAnswerElement.className = 'toggle-answer';
+            toggleAnswerElement.textContent = 'Show Answer';
+            toggleAnswerElement.onclick = function () { toggleAnswer(toggleAnswerElement); };
+        
+            var answerElement = document.createElement('div');
+            answerElement.className = 'answer';
+            answerElement.style.display = 'none';  // Ensure it starts hidden
+        
+            var answerContent = document.createElement('p');
+            answerContent.innerHTML = flashcard.answer;
+            answerContent.style.display = 'none';  // Ensure it starts hidden
+        
+            var copyMarkdownBtn = document.createElement('button');
+            copyMarkdownBtn.className = 'copy-button';
+            copyMarkdownBtn.textContent = 'Copy Flashcard as Markdown';
+            copyMarkdownBtn.onclick = function () { copyFlashcardAsMarkdown(flashcard); };
+        
+            // Create a checkbox for the flashcard
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = 'flashcard-checkbox-' + index;  // Unique ID for each checkbox
+            checkbox.value = index;  // Index of the flashcard in the data array
+
+            var checkboxLabel = document.createElement('label');
+            checkboxLabel.textContent = 'Select';
+            checkboxLabel.htmlFor = 'flashcard-checkbox-' + index;
+            checkboxLabel.className = 'checkbox-label';
+
+        
+            flashcardElement.appendChild(checkbox);  // Append the checkbox to the flashcard element
+            flashcardElement.appendChild(checkboxLabel);
+            flashcardElement.appendChild(questionElement);
+            flashcardElement.appendChild(questionContent);
+            flashcardElement.appendChild(toggleAnswerElement);
+            flashcardElement.appendChild(answerElement);
+            flashcardElement.appendChild(answerContent);
+            flashcardElement.appendChild(copyMarkdownBtn);
+        
+            // Use MathJax to typeset the content after it's added to the DOM
+            MathJax.typesetPromise([questionContent, answerContent]).then(function () {
+                // Once MathJax has finished typesetting, do nothing
+            });
+        
+            return flashcardElement;
+        }
+        
+
+        function copyAllFlashcardsMarkdown() {
+            var markdownContent = generateMarkdownAll();
+
+            // Create a textarea element to hold the Markdown content
+            var textarea = document.createElement('textarea');
+            textarea.value = markdownContent;
+            document.body.appendChild(textarea);
+
+            // Select and copy the content to the clipboard
+            textarea.select();
+            document.execCommand('copy');
+
+            // Remove the textarea
+            document.body.removeChild(textarea);
+
+            alert("All Flashcards copied as Markdown to clipboard!");
+        }
+
+        function copyFlashcardAsMarkdown(flashcard) {
+            var markdownContent = `**Question:**\n${flashcard.question}\n\n**Answer:**\n${flashcard.answer}`;
+            
+            // Create a textarea element to hold the Markdown content
+            var textarea = document.createElement('textarea');
+            textarea.value = markdownContent;
+            document.body.appendChild(textarea);
+
+            // Select and copy the content to the clipboard
+            textarea.select();
+            document.execCommand('copy');
+
+            // Remove the textarea
+            document.body.removeChild(textarea);
+
+            alert("Flashcard copied as Markdown to clipboard!");
+        }
+
+        function generateMarkdownAll() {
+            var markdownContent = '';
+
+            flashcardsData.forEach(function (flashcard) {
+                markdownContent += `**Question:**\n${flashcard.question}\n\n**Answer:**\n${flashcard.answer}\n\n---\n\n`;
+            });
+
+            return markdownContent;
+        }
+
+        var startIndex = 0;
+        var batchSize = 5;
+
+        function toggleAnswer(button) {
+            var answerSection = button.nextElementSibling;
+            var answerContent = answerSection.nextElementSibling;
+            answerSection.style.display = (answerSection.style.display === 'none' || answerSection.style.display === '') ? 'block' : 'none';
+            answerContent.style.display = (answerContent.style.display === 'none' || answerContent.style.display === '') ? 'block' : 'none';
+
+            button.textContent = (answerSection.style.display === 'none') ? 'Show Answer' : 'Hide Answer';
+        }
+
+        function downloadFlashcards() {
+            var flashcardsData = {{ flashcards_json|safe }};
+            var filename = 'flashcards.txt'; // Set the filename for the downloaded file
+            var flashcardsText = '';
+            var dollarRegex = /\$/;
+            var doubleDollarRegex = /\$\$/;
+                flashcardsData.forEach(function(flashcard) {
+                    // Replace inline math delimiters ($) with \( and \)
+                    
+                    var questionTeX = flashcard.question
+                    var answerTeX = flashcard.answer
+
+                    while (dollarRegex.test(questionTeX) || dollarRegex.test(answerTeX)) {
+                        questionTeX = questionTeX.replace(/\$/, '\\(').replace(/\$/, '\\)');
+                        answerTeX = answerTeX.replace(/\$/, '\\(').replace(/\$/, '\\)');
+                    }
+
+                    // Replace display math delimiters ($$) with \[ and \]
+                    
+                    while (doubleDollarRegex.test(questionTeX) || doubleDollarRegex.test(answerTeX)) {
+                        questionTeX = questionTeX.replace(/\$\$/, '\\[').replace(/\$\$/, '\\]');
+                        answerTeX = answerTeX.replace(/\$\$/, '\\[').replace(/\$\$/, '\\]');
+                    }
+
+                    // Keep line breaks
+                    questionTeX = questionTeX.replace(/\n/g, '<br>');
+                    answerTeX = answerTeX.replace(/\n/g, '<br>');
+
+                    flashcardsText += `${questionTeX};${answerTeX}\n\n`;
+                });
+
+                // Create a Blob containing the flashcards text
+                var blob = new Blob([flashcardsText], { type: 'text/plain' });
+
+                // Create a temporary anchor element
+                var a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+
+                // Programmatically trigger a click event on the anchor element
+                a.click();
+
+                // Clean up
+                URL.revokeObjectURL(a.href);
+        }
+
+        function handleDownloadButtonClick() {
+            var selectedFlashcards = []; // Array to store indices of selected flashcards
+        
+            // Iterate over all checkboxes
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function(checkbox, index) {
+                if (checkbox.checked) {
+                    selectedFlashcards.push(index); // Add index of selected flashcard to array
+                }
+            });
+
+            downloadSelectedFlashcards(selectedFlashcards);
+        }
+
+        function downloadSelectedFlashcards(selectedFlashcards) {
+            var selectedFlashcardsData = selectedFlashcards.map(index => flashcardsData[index]);
+            var filename = 'selected_flashcards.txt'; // Set the filename for the downloaded file
+            var flashcardsText = generateFlashcardsText(selectedFlashcardsData);
+            var dollarRegex = /\$/;
+            var doubleDollarRegex = /\$\$/;
+        
+            // Replace inline and display math delimiters
+            selectedFlashcardsData.forEach(function(flashcard) {
+                var questionTeX = flashcard.question;
+                var answerTeX = flashcard.answer;
+        
+                // Replace inline math delimiters ($) with \( and \)
+                while (dollarRegex.test(questionTeX) || dollarRegex.test(answerTeX)) {
+                    questionTeX = questionTeX.replace(/\$/, '\\(').replace(/\$/, '\\)');
+                    answerTeX = answerTeX.replace(/\$/, '\\(').replace(/\$/, '\\)');
+                }
+        
+                // Replace display math delimiters ($$) with \[ and \]
+                while (doubleDollarRegex.test(questionTeX) || doubleDollarRegex.test(answerTeX)) {
+                    questionTeX = questionTeX.replace(/\$\$/, '\\[').replace(/\$\$/, '\\]');
+                    answerTeX = answerTeX.replace(/\$\$/, '\\[').replace(/\$\$/, '\\]');
+                }
+        
+                // Keep line breaks
+                questionTeX = questionTeX.replace(/\n/g, '<br>');
+                answerTeX = answerTeX.replace(/\n/g, '<br>');
+        
+                // Update flashcard content with modified TeX
+                flashcard.question = questionTeX;
+                flashcard.answer = answerTeX;
+            });
+        
+            // Generate text content for selected flashcards
+            flashcardsText = generateFlashcardsText(selectedFlashcardsData);
+        
+            // Create a Blob containing the flashcards text
+            var blob = new Blob([flashcardsText], { type: 'text/plain' });
+        
+            // Create a temporary anchor element
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+        
+            // Programmatically trigger a click event on the anchor element
+            a.click();
+        
+            // Clean up
+            URL.revokeObjectURL(a.href);
+        }
+        
+        var downloadButton = document.getElementById('download-selected-button');
+        downloadButton.addEventListener('click', handleDownloadButtonClick);
+
+        
+
+        function generateFlashcardsText(flashcardsData) {
+            var flashcardsText = '';
+        
+            // Generate text content for each flashcard
+            flashcardsData.forEach(function(flashcard) {
+                flashcardsText += `${flashcard.question};${flashcard.answer}\n\n`;
+            });
+        
+            return flashcardsText;
+        }
+        
+    </script>
+
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body>
 </html>
