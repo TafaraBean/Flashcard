@@ -6,7 +6,7 @@ from Flash_App.image_ocr import process_image_for_ocr
 from openai import OpenAI
 
 
-client = OpenAI()
+
 
 def index(request):
     return render(request, 'index.html')
