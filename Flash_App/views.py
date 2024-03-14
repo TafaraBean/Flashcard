@@ -1,4 +1,4 @@
-# myapp/views.py
+from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 import json
@@ -6,7 +6,7 @@ from Flash_App.image_ocr import process_image_for_ocr
 from openai import OpenAI
 
 
-
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 def index(request):
     return render(request, 'index.html')
