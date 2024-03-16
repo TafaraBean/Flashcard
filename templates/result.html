@@ -65,7 +65,7 @@
     </script>
 </head>
 <body>
-    <button onclick="copyAllFlashcardsMarkdown()" id="copy-all-markdown-btn">Copy All Flashcards as Markdown</button>
+    <button onclick="copySelectedFlashcardsPlainText()" id="copy-all-markdown-btn">Copy Selected Flashcards for anki</button>
     <button onclick="downloadFlashcards()" id="download-anki">Download  All Flashcards for Anki</button>
     <button id="download-selected-button">Download Selected Flashcards</button>
     <div id="flashcards-content">
@@ -138,12 +138,31 @@
         }
         
 
-        function copyAllFlashcardsMarkdown() {
-            var markdownContent = generateMarkdownAll();
-
-            // Create a textarea element to hold the Markdown content
+        function copySelectedFlashcardsPlainText() {
+            var selectedFlashcards = []; // Array to store indices of selected flashcards
+          
+            // Iterate over all checkboxes
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function(checkbox, index) {
+              if (checkbox.checked) {
+                selectedFlashcards.push(index); // Add index of selected flashcard to array
+              }
+            });
+          
+            // Check if any flashcards are selected
+            if (selectedFlashcards.length === 0) {
+              alert("Please select flashcards to copy!");
+              return;
+            }
+          
+            var selectedFlashcardsData = selectedFlashcards.map(index => flashcardsData[index]);
+            var plainTextContent = generatePlainTextSelected(selectedFlashcardsData);
+          
+            // Rest of the code remains the same as in copyAllFlashcardsPlainText
+            // (creating textarea, copying content, removing textarea, and displaying alert)
+            // Create a textarea element to hold the plain text content
             var textarea = document.createElement('textarea');
-            textarea.value = markdownContent;
+            textarea.value = plainTextContent;
             document.body.appendChild(textarea);
 
             // Select and copy the content to the clipboard
@@ -153,8 +172,20 @@
             // Remove the textarea
             document.body.removeChild(textarea);
 
-            alert("All Flashcards copied as Markdown to clipboard!");
-        }
+            alert("All Flashcards copied as plain text to clipboard!");
+          }
+          
+          function generatePlainTextSelected(selectedFlashcardsData) {
+            var plainTextContent = '';
+          
+            // Generate text content for each selected flashcard
+            selectedFlashcardsData.forEach(function(flashcard) {
+              plainTextContent += `${flashcard.question};${flashcard.answer}\n\n`;
+            });
+          
+            return plainTextContent;
+          }
+          
 
         function copyFlashcardAsMarkdown(flashcard) {
             var markdownContent = `**Question:**\n${flashcard.question}\n\n**Answer:**\n${flashcard.answer}`;
