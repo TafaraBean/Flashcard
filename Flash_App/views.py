@@ -42,12 +42,16 @@ def process_text(request):
                 ]
             )
             print(completion.choices[0].message.content)
-            summarize_text(combined_text)
+            summary=summarize_text(combined_text)
             # Extract questions and answers from the completion
             flashcards = parse_questions_answers(completion.choices[0].message.content)
             flashcards_json = json.dumps(flashcards)
+            context = {
+                'summary': summary,
+                 'flashcards_json': flashcards_json,  # List of dictionaries containing question and answer pairs
+                 }
 
-            return render(request, 'result.html', {'flashcards_json': flashcards_json})
+            return render(request, 'result.html', context)
 
         except Exception as e:
             error_message = str(e)
@@ -68,6 +72,8 @@ def parse_questions_answers(content):
         flashcards.append({'question': question.strip(), 'answer': answer.strip()})
 
     return flashcards
+
+
 
 
 
