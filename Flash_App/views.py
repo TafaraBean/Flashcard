@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 import json
 from Flash_App.image_ocr import process_image_for_ocr
-from Flash_App.text_summary import summarize_text
 from openai import OpenAI
 
 
@@ -42,6 +41,7 @@ def process_text(request):
                 ]
             )
             print(completion.choices[0].message.content)
+
             summary=summarize_text(combined_text)
             # Extract questions and answers from the completion
             flashcards = parse_questions_answers(completion.choices[0].message.content)
