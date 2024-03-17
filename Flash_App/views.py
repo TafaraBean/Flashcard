@@ -42,7 +42,8 @@ def process_text(request):
             )
             print(completion.choices[0].message.content)
 
-            summary=summarize_text(combined_text)
+
+            
             # Extract questions and answers from the completion
             flashcards = parse_questions_answers(completion.choices[0].message.content)
             flashcards_json = json.dumps(flashcards)
