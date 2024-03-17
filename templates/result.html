@@ -70,7 +70,6 @@
     <button id="download-selected-button">Download Selected Flashcards</button>
     <div id="flashcards-content">
         <h1 style="color:white;">Flashcards</h1>
-        <div id="summary-container"></div>
         <div id="flashcards-container"></div>
     </div>
 
@@ -137,36 +136,6 @@
         
             return flashcardElement;
         }
-
-        document.getElementById('generate-mindmap-btn').addEventListener('click', function() {
-            const content = document.getElementById('text_input').value;
-          
-            // Process content for flashcards (existing logic)
-            // ... your code to process content for flashcards ...
-          
-            // Summarize the content
-            
-          
-            // Send the content (including summary context) to the server
-            fetch('/process_text', {
-              method: 'POST',
-              body: JSON.stringify(summaryContext),
-              headers: { 'Content-Type': 'application/json' }
-            })
-            .then(response => response.json())
-            .then(data => {
-              // Access the received summary
-              const receivedSummary = data.summary;
-          
-              // Handle other data as needed (e.g., flashcards)
-              document.getElementById('summary-container').innerHTML = data.summary;
-              document.getElementById('flashcards-container').innerHTML = data.flashcards;
-          
-              // You can now use `receivedSummary` for further processing or display
-            })
-            .catch(error => console.error(error));
-          });
-          
         
 
         function copySelectedFlashcardsPlainText() {

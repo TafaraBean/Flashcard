@@ -46,12 +46,9 @@ def process_text(request):
             # Extract questions and answers from the completion
             flashcards = parse_questions_answers(completion.choices[0].message.content)
             flashcards_json = json.dumps(flashcards)
-            context = {
-                'summary': summary,
-                 'flashcards_json': flashcards_json,  # List of dictionaries containing question and answer pairs
-                 }
+            
 
-            return render(request, 'result.html', context)
+            return render(request, 'result.html', {'flashcards_json': flashcards_json})
 
         except Exception as e:
             error_message = str(e)
