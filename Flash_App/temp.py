@@ -1,6 +1,8 @@
 # pip install accelerate
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from django.conf import settings
 
+from transformers import AutoTokenizer, AutoModelForCausalLM
+token = settings.HF_TOKEN
 tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b-it")
 model = AutoModelForCausalLM.from_pretrained("google/gemma-2b-it", device_map="auto")
 
