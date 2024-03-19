@@ -1,11 +1,11 @@
+# pip install accelerate
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
-from transformers import T5Tokenizer, T5ForConditionalGeneration
+tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b-it")
+model = AutoModelForCausalLM.from_pretrained("google/gemma-2b-it", device_map="auto")
 
-tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-small")
-model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-small", device_map="auto")
+input_text = "Write me a poem about Machine Learning."
+input_ids = tokenizer(input_text, return_tensors="pt").to("cuda")
 
-input_text = "translate English to German: How old are you?"
-input_ids = tokenizer(input_text, return_tensors="pt").input_ids.to("cuda")
-
-outputs = model.generate(input_ids)
+outputs = model.generate(**input_ids)
 print(tokenizer.decode(outputs[0]))
