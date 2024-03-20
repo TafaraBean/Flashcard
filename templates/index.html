@@ -25,7 +25,7 @@
                 {% csrf_token %}
                 <label for="text_input">Enter the text:<br>(Supports LaTeX code)</label>
                 <textarea id="text_input" name="text_input" rows="4" cols="50"></textarea><br>
-                <label for="image_input">Or<br><br>Upload an image:<br>(can't support LaTeX code)</label>
+                <label for="image_input">Or<br><br>Upload an image:(screenshot of PDF page. Camera may be faulty)</label>
                 <input type="file" id="image_input" name="image_input"><br>
                 <p class="limit-message">Note: Please limit your input to 3000 words or less. (Quality over quantity)</p>
                 <input type="submit" value="Submit">
@@ -39,9 +39,14 @@
                 <p class="after-text">To this!</p>
                 <img class="after" src="{% static 'img/latex after.webp' %}" alt="Flashcard Example 2">
             </div>
-            <p class="usage-text">-Copy the generated flashcards to your clipboard as markdown for obsidian or download an anki-compatible file.</p>
+            <p class="usage-text">
+                - Copy/download the generated flashcards to your clipboard as plain text for 
+                <a href="https://apps.ankiweb.net/">Anki</a> (consider using a tool for easier import).
+              </p>
+              
             <p class="usage-text">-If flashcards are not optimal, refresh the page and new flashcards will be generated.</p>
-            <p class="usage-text">-Does your image have LaTeX code? Try <a href="https://mathpix.com/" target="_blank">MathPix</a>!</p>
+            <p class="usage-text">-Does your image have LaTeX code which couldn't be rendered? Try <a href="https://mathpix.com/" target="_blank">MathPix</a>!</p>
+            <p>-Images work best with screenshots from PDFs. </p>
 
         </div>
     </div>
