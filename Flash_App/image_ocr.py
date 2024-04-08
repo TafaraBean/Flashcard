@@ -27,7 +27,7 @@ def compress_image(image):
     #image.save("compressed_image.jpg", optimize=True, quality=85)
 
     # Reload the compressed image
-    compressed_image = Image.open("compressed_image.jpg")
-    return compressed_image
+    #compressed_image = Image.open("compressed_image.jpg")
+    return image
 
 
