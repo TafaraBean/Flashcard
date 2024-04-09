@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8775932223788843"
+     crossorigin="anonymous"></script>
     <script>
         MathJax = {
             tex: {
@@ -68,16 +70,22 @@
     <button onclick="copySelectedFlashcardsPlainText()" id="copy-all-markdown-btn">Copy Selected Flashcards for anki</button>
     <button onclick="downloadFlashcards()" id="download-anki">Download  All Flashcards for Anki</button>
     <button id="download-selected-button">Download Selected Flashcards</button>
+    <button id="home-button">Back</button>
     <div id="flashcards-content">
         <h1 style="color:white;">Flashcards</h1>
         <div id="flashcards-container"></div>
     </div>
 
    
-
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8775932223788843"
+     crossorigin="anonymous"></script>
     <script>
         var flashcardsContainer = document.getElementById('flashcards-container');
         var flashcardsData = {{ flashcards_json|safe }};
+
+        document.getElementById("home-button").addEventListener("click", function() {
+            window.location.href = "/"; // Replace "/" with your actual homepage URL if different
+        });
 
         // Function to create a flashcard element (similar to your existing implementation)
         function createFlashcardElement(flashcard, index) {
