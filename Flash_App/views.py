@@ -17,20 +17,19 @@ def process_text(request):
         text_input = request.POST.get('text_input', '')
         
         # Check if an image file is uploaded
-        if 'image_input' in request.FILES:
-            image_input = request.FILES['image_input']
+        if 'image_inputs' in request.FILES:
+            image_texts = []
+            for image_file in request.FILES.getlist('image_inputs'):
+                image_text = process_image_for_ocr(image_file)
+                image_texts.append(image_text)
+            combined_image_text = '\n'.join(image_texts)
+        else:
+            combined_image_text=""   
             
             # Process the image for OCR
-            text_from_image = process_image_for_ocr(image_input)
+        combined_text = text_input+"\n"+combined_image_text   
             
-            # Combine text from input and image
-            if text_input:
-                combined_text = text_input + '\n' + text_from_image
-            else:
-                combined_text = text_from_image
-        else:
-            # No image uploaded, use only text input
-            combined_text = text_input
+          
 
         try:
             completion = client.chat.completions.create(
