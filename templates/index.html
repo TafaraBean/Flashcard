@@ -28,7 +28,7 @@
                 {% csrf_token %}
                 <label for="text_input">Enter the text:<br>(Supports LaTeX code)</label>
                 <textarea id="text_input" name="text_input" rows="4" cols="50"></textarea><br>
-                <label for="image_input">Or<br><br>Upload an image:(screenshot of PDF page. Camera may be faulty)</label>
+                <label for="image_input">Or<br><br>Upload an image or multiple images:(screenshot of PDF pages work best. Camera may be faulty)</label>
                 <input type="file" id="image_input" name="image_inputs" multiple><br>
                 <p class="limit-message">Note: Please limit your input to 3000 words or less. (Quality over quantity)</p>
                 <input type="submit" value="Submit">
@@ -49,7 +49,7 @@
               
             <p class="usage-text">-If flashcards are not optimal, refresh the page and new flashcards will be generated.</p>
             <p class="usage-text">-Does your image have LaTeX code which couldn't be rendered? Try <a href="https://mathpix.com/" target="_blank">MathPix</a>!</p>
-            <p class="usage-text">-Images work best with screenshots from PDFs. </p>
+            <p class="usage-text">-Images work best with screenshots from PDFs or Copy text from PDFs and paste it in the text area! </p>
 
         </div>
     </div>
