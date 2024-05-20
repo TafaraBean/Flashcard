@@ -125,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = '/var/www/html/static/'
+STATIC_ROOT = '/home/ubuntu/Flashcard/staticfiles/'
 
 
 # Default primary key field type
