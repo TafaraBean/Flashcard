@@ -4,6 +4,8 @@ from django.http import HttpResponse, JsonResponse
 import json
 from Flash_App.image_ocr import process_image_for_ocr
 from openai import OpenAI
+from django.views.decorators.http import require_POST
+from .utils import *
 
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
@@ -11,8 +13,8 @@ client = OpenAI(api_key=settings.OPENAI_API_KEY)
 def index(request):
     return render(request, 'index.html')
 
+@require_POST
 def process_text(request):
-    if request.method == 'POST':
         # Check if text input is provided
         text_input = request.POST.get('text_input', '')
         
@@ -56,19 +58,6 @@ def process_text(request):
                 return JsonResponse({'error': 'Text exceeds token limit. Please reduce the text size.'}, status=400)
             else:
                 return JsonResponse({'error': 'Error processing text.'}, status=500)
-
-    return HttpResponse("Method Not Allowed", status=405)
-
-def parse_questions_answers(content):
-    # Implement your parsing logic here
-    pairs = content.split('Question: ')[1:]
-    flashcards = []
-
-    for pair in pairs:
-        question, answer = pair.split('Answer: ')
-        flashcards.append({'question': question.strip(), 'answer': answer.strip()})
-
-    return flashcards
 
 
 
