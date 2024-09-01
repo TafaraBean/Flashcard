@@ -5,16 +5,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
       if (textInput === "" && imageInput === "") {
           event.preventDefault(); // Prevent form submission
-          alert("Please enter text or upload an image.");
+          alert("Please enter text or upload an image/pdf.");
       }
 
       // Check if an image is uploaded and validate its format
       if (imageInput !== "") {
-          var allowedFormats = ["jpg", "jpeg", "png", "gif"]; // Add more formats if needed
+          var allowedFormats = ["jpg", "jpeg", "png", "gif", "pdf"]; // Add more formats if needed
           var extension = imageInput.split('.').pop().toLowerCase();
           if (!allowedFormats.includes(extension)) {
               event.preventDefault(); // Prevent form submission
-              alert("Please upload an image in JPG, JPEG, PNG, or GIF format.");
+              alert("Please upload an image in JPG, JPEG, PNG, GIF or PDF format.");
           }
       }
   });

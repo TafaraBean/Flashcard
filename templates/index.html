@@ -9,13 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static "index.css" %}">
-    <script src="{% static 'index.js' %}">    
+    <script src="{% static 'index.js' %}"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8775932223788843" crossorigin="anonymous"></script>
+    <script>
+        function setFormAction(actionUrl) {
+            document.getElementById('flashcard-form').action = actionUrl;
+        }
     </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8775932223788843"
-     crossorigin="anonymous"></script>
 </head>
 <body>
-    
     <div class="background">
         <div class="header">
             <h1>Flash Gen</h1>
@@ -24,14 +26,15 @@
             <p>Developed by a computer science undergraduate to assist students everywhere</p>
         </div>
         <div class="input_form">
-            <form id="flashcard-form" action="/process_text/" method="post" enctype="multipart/form-data">
+            <form id="flashcard-form" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <label for="text_input">Enter the text:<br>(Supports LaTeX code)</label>
                 <textarea id="text_input" name="text_input" rows="4" cols="50"></textarea><br>
                 <label for="image_input">Or<br><br>Upload an image or multiple images:(screenshot of PDF pages work best. Camera may be faulty)</label>
                 <input type="file" id="image_input" name="image_inputs" multiple><br>
                 <p class="limit-message">Note: Please limit your input to 3000 words or less. (Quality over quantity)</p>
-                <input type="submit" value="Submit">
+                <input type="submit" value="Submit to Flashcards" onclick="setFormAction('{% url 'process_text' %}')">
+                <input type="submit" value="Submit to Notes" onclick="setFormAction('{% url 'notes' %}')">
             </form>
         </div>
         <div class="info-area" id="info-area">
@@ -45,17 +48,11 @@
             <p class="usage-text">
                 - Copy/download the generated flashcards to your clipboard as plain text for 
                 <a href="https://apps.ankiweb.net/">Anki</a> (consider using a tool for easier import).
-              </p>
-              
+            </p>
             <p class="usage-text">-If flashcards are not optimal, refresh the page and new flashcards will be generated.</p>
             <p class="usage-text">-Does your image have LaTeX code which couldn't be rendered? Try <a href="https://mathpix.com/" target="_blank">MathPix</a>!</p>
             <p class="usage-text">-Images work best with screenshots from PDFs or Copy text from PDFs and paste it in the text area! </p>
-
         </div>
     </div>
 </body>
 </html>
-
-
-
-

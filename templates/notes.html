@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Notes</title>
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+</head>
+<body>
+    <h1>Generated Notes</h1>
+    <div class="response-container">
+        <textarea rows="20" cols="80">{{ response }}</textarea>
+    </div>
+    <div class="clarification-form">
+        <form id="clarification-form" action="{% url 'clarify' %}" method="post">
+            {% csrf_token %}
+            <label for="clarification_input">Need further clarification? Ask here:</label><br>
+            <textarea id="clarification_input" name="clarification_input" rows="4" cols="50"></textarea><br>
+            <input type="hidden" name="previous_response" value="{{ response }}">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
