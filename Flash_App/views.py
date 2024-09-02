@@ -141,42 +141,46 @@ def process_text(request):
 
 def notes(request):
     text_input = request.POST.get('text_input', '')
+    combined_image_text = ''
 
     # Check if an image file or PDF is uploaded
+    # Check if an image file or PDF is uploaded
     if 'image_inputs' in request.FILES:
-        file_texts = []
+        image_texts = []
         for file in request.FILES.getlist('image_inputs'):
             if file.name.lower().endswith('.pdf'):
-                # Extract text from the PDF without slicing
+                # Extract text from the PDF
                 pdf_text = extract_text_from_pdf(file)
-                try:
-                    completion = client.chat.completions.create(
-                        model="gpt-4o",
-                        messages=[
-                            {"role": "system", "content": "You are a helpful assistant skilled at making notes. Also answer all questions posed to you. Don't convert/render any latex code."},
-                            {"role": "user", "content": pdf_text}
-                        ]
-                    )
-                    file_texts.append(completion.choices[0].message.content)
-                except Exception as e:
-                    error_message = str(e)
-                    if 'context_length_exceeded' in error_message:
-                        return JsonResponse({'error': 'Text exceeds token limit. Please reduce the text size.'}, status=400)
-                    else:
-                        return JsonResponse({'error': 'Error processing text.'}, status=500)
+                image_texts.append(pdf_text)
             else:
                 # Process the image for OCR
                 image_text = process_image_for_ocr(file)
-                file_texts.append(image_text)
+                image_texts.append(image_text)
 
-        combined_file_text = '\n'.join(file_texts)
+        combined_image_text = '\n'.join(image_texts)
     else:
-        combined_file_text = ""
+        combined_image_text = ""
 
-    # Combine text input and file text
-    combined_text = text_input + "\n" + combined_file_text      
-
-    return render(request, 'notes.html', {'response': combined_text})
+    #combined_text = text_input + "\n" + combined_image_text    
+    
+    try:
+        completion = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant skilled at making notes the botes should be concise and summarize the content"},
+                {"role": "user", "content": combined_image_text}
+            ]
+        )
+        #print(completion.choices[0].message.content)
+       
+    except Exception as e:
+        error_message = str(e)
+        if 'context_length_exceeded' in error_message:
+            return JsonResponse({'error': 'Text exceeds token limit. Please reduce the text size.'}, status=400)
+        else:
+            return JsonResponse({'error': 'Error processing text.'}, status=500)  
+    response  = completion.choices[0].message.content
+    return render(request, 'notes.html', {'response': response})
         
 def clarify(request):
     clarification_input = request.POST.get('clarification_input', '')
