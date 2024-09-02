@@ -15,7 +15,7 @@ import pdfplumber
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
-#pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def process_image_for_ocr(image_file):
     # Open the image file
@@ -172,6 +172,8 @@ def notes(request):
             ]
         )
         #print(completion.choices[0].message.content)
+        response  = completion.choices[0].message.content
+        return render(request, 'notes.html', {'response': response})
        
     except Exception as e:
         error_message = str(e)
@@ -179,8 +181,8 @@ def notes(request):
             return JsonResponse({'error': 'Text exceeds token limit. Please reduce the text size.'}, status=400)
         else:
             return JsonResponse({'error': 'Error processing text.'}, status=500)  
-    response  = completion.choices[0].message.content
-    return render(request, 'notes.html', {'response': response})
+    
+    
         
 def clarify(request):
     clarification_input = request.POST.get('clarification_input', '')
