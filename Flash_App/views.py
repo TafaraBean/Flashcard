@@ -15,7 +15,7 @@ import pdfplumber
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+#pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def process_image_for_ocr(image_file):
     # Open the image file
