@@ -39,7 +39,7 @@ def compress_image(image):
     return image
 
 
-import fitz  # PyMuPDF
+
 
 def extract_text_from_pdf(pdf_file):
     try:
