@@ -1,20 +1,17 @@
 from django.conf import settings
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 import json
 from openai import OpenAI
 from django.views.decorators.http import require_POST
 from .utils import *
-from PyPDF2 import PdfReader
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO
 import pytesseract
 from PIL import Image
-from pdf2image import convert_from_path
+
 from pdf2image import convert_from_bytes
 import pdfplumber
-import tempfile
-import os
+
 
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
