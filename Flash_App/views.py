@@ -161,14 +161,14 @@ def notes(request):
     else:
         combined_image_text = ""
 
-    #combined_text = text_input + "\n" + combined_image_text    
+    combined_text = text_input + "\n" + combined_image_text    
     
     try:
         completion = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant skilled at making notes the botes should be concise and summarize the content"},
-                {"role": "user", "content": combined_image_text}
+                {"role": "user", "content": combined_text}
             ]
         )
         #print(completion.choices[0].message.content)
