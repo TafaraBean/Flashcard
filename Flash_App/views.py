@@ -8,7 +8,6 @@ from .utils import *
 from io import BytesIO
 import pytesseract
 from PIL import Image
-
 from pdf2image import convert_from_bytes
 import pdfplumber
 
