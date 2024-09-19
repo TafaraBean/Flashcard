@@ -167,7 +167,7 @@ def notes(request):
         completion = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant skilled at making notes. the notes should summarize the content without losing the meaning of the content.take note of all definitions and their meanings. enclose all LaTeX code within $..$(for inline equations) or $$..$$ for display.also use markdown formatting for aesthetic notes."},
+                {"role": "system", "content": "You are a helpful assistant skilled at making notes. the notes should summarize the content without losing the meaning of the content.take note of all definitions and their meanings. enclose all,and ABSOLUTELY ALL, LaTeX code within $..$(for inline equations) or $$..$$ for display.also use markdown formatting for aesthetic notes."},
                 {"role": "user", "content": combined_text}
             ]
         )
