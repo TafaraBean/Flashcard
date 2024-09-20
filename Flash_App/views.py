@@ -45,35 +45,6 @@ def extract_text_from_pdf(pdf_file):
     try:
         # Convert InMemoryUploadedFile to BytesIO
         pdf_bytes = BytesIO(pdf_file.read())
-        
-        # Initialize text storage
-        text = ""
-        text_found = False
-        
-        # Attempt to extract text with pdfplumber from the first 3 pages
-        with pdfplumber.open(pdf_bytes) as pdf:
-            num_pages = min(len(pdf.pages), 3)  # Limit to first 3 pages
-            for page_num in range(num_pages):
-                page = pdf.pages[page_num]
-                page_text = page.extract_text()
-                if page_text.strip():
-                    text_found = True
-                text += page_text or ""
-                text += "\n"
-                print(f"Extracted text from page {page_num + 1}: {page_text}")
-
-        if text_found:  # If any text was found, process the entire document
-            pdf_bytes.seek(0)  # Reset file pointer to start
-            with pdfplumber.open(pdf_bytes) as pdf:
-                for page in pdf.pages:
-                    page_text = page.extract_text()
-                    text += page_text or ""
-                    text += "\n"
-            return text
-        
-        # If no text is extracted from the first 3 pages, use OCR
-        print("No text extracted from the first 3 pages. Using OCR...")
-        
         pdf_bytes.seek(0)  # Reset file pointer to start
         images = convert_from_bytes(pdf_bytes.read())
         text = ""
