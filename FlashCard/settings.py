@@ -30,7 +30,7 @@ OPENAI_API_KEY=os.environ.get("OPENAI_API_KEY")
 HF_TOKEN=os.environ.get("HF_TOKEN")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
